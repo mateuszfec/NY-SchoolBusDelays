@@ -1,6 +1,25 @@
 # Libraries
 import pandas as pd
 
+# -------------------------------------------------- Functions ---------------------------------------------------------
+# Convert categorical variable into dummies
+def variableToDummies(dataset, colname, finalName):
+    tempdummies = pd.get_dummies(dataset[colname], prefix="temp")
+    element = 1
+    for key, value in tempdummies.iterrows():
+        for i, j in value.iteritems():
+            if j == 1:
+                # tempdummies.at[key, i] = element
+                # print("Value changed")
+                tempdummies.at[key, "temp_summary_272727"] = int(element)
+                # print("Value added")
+            element = element + 1
+        element = 1
+    tempdummies.fillna(0, inplace=True)
+    dataset.drop([colname], axis=1, inplace=True)
+    dataset[finalName] = tempdummies["temp_summary_272727"]
+    return dataset
+
 # ------------------------------------------------- Data import --------------------------------------------------------
 # Sample data
 sampleData = True
@@ -14,7 +33,6 @@ if sampleData:
     dataset = fullData.sample(frac=sampleHeight)
 else:
     dataset = fullData
-
 # print(dataset.count)
 
 # ---------------------------------------------- Data preprocessing ----------------------------------------------------
@@ -33,22 +51,20 @@ dataset["Reaction_Time"] = dataset["Created_On_Time"]-dataset["Occurred_On_Time"
 # Remove unused data
 dataset.drop(["Incident_Number",
               "Last_Updated_On",
-              "Occurred_On",
-              "Occurred_On_Time",
-              "Created_On",
-              "Created_On_Time",
-              "Informed_On",
-              "Created_On_Date",
-              "Informed_On_Date"], axis=1, inplace=True)
+              "Occurred_On", "Occurred_On_Time",
+              "Created_On", "Created_On_Time", "Created_On_Date",
+              "Informed_On", "Informed_On_Date"], axis=1, inplace=True)
 
+# Convert categorical into dummy variables
+dataset = variableToDummies(dataset, "Reason", "Delay_Reason")
+# TODO: convert rest of categorical variables into dummy ;)
 
+dataset[["Schools_NOT_Notified", "Schools_Notified"]] = pd.get_dummies(dataset['Has_Contractor_Notified_Schools'])
+dataset[["Parents_NOT_Notified", "Parents_Notified"]] = pd.get_dummies(dataset['Has_Contractor_Notified_Parents'])
 
-
-#potrzebne jest przekonwertowanie tego na dummies (bo wtedy będą ciągłe) ale coś u mnie się sypie
-pd.get_dummies(dataset)
-# w zasadzie wszystkie zmienne tutaj są jakościowe (w sensie że nie ma jak dla nich wyliczyć statystyk opisowych)
-# tylko przeszkadza ta kolumna z czasem trwania bo jest ona strasznie nieregularnie zrobiona
-
+# Remove categorical variables
+dataset.drop(["Has_Contractor_Notified_Schools", "Schools_NOT_Notified",
+              "Has_Contractor_Notified_Parents", "Parents_NOT_Notified"], axis=1, inplace=True)
 
 # ---------------------------------------------------- K-Means ---------------------------------------------------------
 # TODO: k-means clustering
@@ -57,3 +73,5 @@ pd.get_dummies(dataset)
 # TODO: affinity propagation
 
 print("END")
+
+
