@@ -1,47 +1,59 @@
 # Libraries
-import numpy as np
 import pandas as pd
 
+# ------------------------------------------------- Data import --------------------------------------------------------
+# Sample data
+sampleData = True
+sampleHeight = 0.035
 
-# Dataset transformations
-from pandas import DataFrame
+# Full data
+fullData = pd.read_csv("data/bus-breakdown-and-delays.csv", dtype={"Incident_Number": str})
+fullData.fillna(0, inplace=True)
 
-dataset = pd.read_csv("data/bus-breakdown-and-delays.csv", dtype={"Incident_Number": str})
-dataset.fillna(0, inplace=True)
+if sampleData:
+    dataset = fullData.sample(frac=sampleHeight)
+else:
+    dataset = fullData
 
-# Data preprocessing
-dataset.drop(["Incident_Number", "Last_Updated_On"], axis=1, inplace=True)
+# print(dataset.count)
 
-# Occurred_On splitting
-new1 = dataset["Occurred_On"].str.split(pat="T", n=1, expand=True)
-dataset["Occurred_On_Date"] = new1[0]
-dataset["Occurred_On_Time"] = new1[1]
+# ---------------------------------------------- Data preprocessing ----------------------------------------------------
+# Split dates and time
+dataset[["Event Date", "Occurred_On_Time"]] = dataset["Occurred_On"].str.split("T", expand=True)
+dataset[["Created_On_Date", "Created_On_Time"]] = dataset["Created_On"].str.split("T", expand=True)
+dataset[["Informed_On_Date", "Informed_On_Time"]] = dataset["Informed_On"].str.split("T", expand=True)
 
-# Created_On splitting
-new2 = dataset["Created_On"].str.split("T",n=1, expand=True)
-dataset["Created_On_Time"] = new2[1]
-
-# Informed_On splitting
-new3 = dataset["Informed_On"].str.split("T", n=1, expand=True)
-dataset["Informed_On_Time"] = new3[1]
-
-dataset.drop(["Occurred_On", "Created_On", "Informed_On"], axis=1, inplace=True)
-dataset.rename(columns={'Occurred_On_Date': 'Event Date'}, inplace=True)
-
+# Set right format of the data
 dataset["Occurred_On_Time"] = pd.to_datetime(dataset["Occurred_On_Time"])
 dataset["Created_On_Time"] = pd.to_datetime(dataset["Created_On_Time"])
 
-dataset["Reaction Time"] = dataset["Created_On_Time"]-dataset["Occurred_On_Time"]
-dataset.drop(["Occurred_On_Time", "Created_On_Time"], axis=1, inplace=True)
+# Calculate difference between event occurred time and system creation time
+dataset["Reaction_Time"] = dataset["Created_On_Time"]-dataset["Occurred_On_Time"]
+
+# Remove unused data
+dataset.drop(["Incident_Number",
+              "Last_Updated_On",
+              "Occurred_On",
+              "Occurred_On_Time",
+              "Created_On",
+              "Created_On_Time",
+              "Informed_On",
+              "Created_On_Date",
+              "Informed_On_Date"], axis=1, inplace=True)
+
+
+
 
 #potrzebne jest przekonwertowanie tego na dummies (bo wtedy będą ciągłe) ale coś u mnie się sypie
 pd.get_dummies(dataset)
 # w zasadzie wszystkie zmienne tutaj są jakościowe (w sensie że nie ma jak dla nich wyliczyć statystyk opisowych)
 # tylko przeszkadza ta kolumna z czasem trwania bo jest ona strasznie nieregularnie zrobiona
 
-#TO DO:
-#k-means clustering
-#affinity propagation
 
-#print(dataset.dtypes)
+# ---------------------------------------------------- K-Means ---------------------------------------------------------
+# TODO: k-means clustering
+
+# ----------------------------------------------- Affinity Propagation -------------------------------------------------
+# TODO: affinity propagation
+
 print("END")
