@@ -9,8 +9,9 @@ def variableToDummies(dataset, colname, finalName, legend):
         listposition = 1
         print(finalName+":")
         for i in tempdummies.columns:
-            print("\t", listposition, "- "+i)
+            print("\t", listposition, "-", i)
             listposition = listposition + 1
+        print("")
 
     element = 1
     for key, value in tempdummies.iterrows():
@@ -27,6 +28,11 @@ def variableToDummies(dataset, colname, finalName, legend):
     dataset.drop([colname], axis=1, inplace=True)
     dataset[finalName] = tempdummies["temp_summary_272727"]
 
+    return dataset
+# String multi-replacement
+def multipleReplace(dataset, colname, phraseList, replace):
+    for key in phraseList:
+        dataset[colname] = dataset[colname].replace(key, replace)
     return dataset
 
 # ------------------------------------------------- Data import --------------------------------------------------------
@@ -46,49 +52,63 @@ else:
 
 # ---------------------------------------------- Data preprocessing ----------------------------------------------------
 # Split dates and time
-dataset[["Event Date", "Occurred_On_Time"]] = dataset["Occurred_On"].str.split("T", expand=True)
-dataset[["Created_On_Date", "Created_On_Time"]] = dataset["Created_On"].str.split("T", expand=True)
-dataset[["Informed_On_Date", "Informed_On_Time"]] = dataset["Informed_On"].str.split("T", expand=True)
-
-# Set right format of the data
-dataset["Occurred_On_Time"] = pd.to_datetime(dataset["Occurred_On_Time"])
-dataset["Created_On_Time"] = pd.to_datetime(dataset["Created_On_Time"])
+dataset[["Event_Date", "Occurred_On"]] = dataset["Occurred_On"].str.split("T", expand=True)
+dataset["Created_On"] = dataset["Created_On"].str.split("T", expand=True)[1]
+dataset["Informed_On"] = dataset["Informed_On"].str.split("T", expand=True)[1]
 
 # Calculate difference between event occurred time and system creation time
-dataset["Reaction_Time"] = dataset["Created_On_Time"]-dataset["Occurred_On_Time"]
+dataset["Occurred_On"] = pd.to_datetime(dataset["Occurred_On"])
+dataset["Created_On"] = pd.to_datetime(dataset["Created_On"])
+dataset["Reaction_Time"] = dataset["Created_On"] - dataset["Occurred_On"]
+
+# Set right format of the date type data
+# TODO: Set right type of the date data type variables (Occured_On, Created_On, Informed_On and Reaction_Time)
 
 # Remove unused data
 dataset.drop(["Incident_Number",
               "Last_Updated_On",
               "Busbreakdown_ID",
-              "Schools_Serviced",
-              "Occurred_On", "Occurred_On_Time",
-              "Created_On", "Created_On_Time", "Created_On_Date",
-              "Informed_On", "Informed_On_Date"], axis=1, inplace=True)
+              "Schools_Serviced"], axis=1, inplace=True)
+
+# Bus corporation names unification
+dataset["Bus_Company_Name"] = dataset["Bus_Company_Name"].str.split("(", expand=True)[0]
+dataset["Bus_Company_Name"] = dataset["Bus_Company_Name"].str.strip()
+multipleReplace(dataset, "Bus_Company_Name", {'ALL AMERICAN SCHOOL BUS C'}, "ALL AMERICAN SCHOOL BUS CORP.")
+multipleReplace(dataset, "Bus_Company_Name", {'CAREFUL BUS'}, "CAREFUL BUS SERVICE INC")
+multipleReplace(dataset, "Bus_Company_Name", {'CONSOLIDATED BUS TRANS. I', 'CONSOLIDATED BUS TRANSIT, INC.'}, "CONSOLIDATED BUS TRANS. INC.")
+multipleReplace(dataset, "Bus_Company_Name", {'EMPIRE CHARTER SERVICE IN'}, "EMPIRE CHARTER SERVICE INC")
+multipleReplace(dataset, "Bus_Company_Name", {'FIRST STEPS', 'FIRST STEPS TRANS, INC', 'FIRST STEPS TRANSP INC.'}, "FIRST STEPS TRANS INC.")
+multipleReplace(dataset, "Bus_Company_Name", {'G.V.C., LTD.'}, "G.V.C. LTD.")
+multipleReplace(dataset, "Bus_Company_Name", {'L & M BUS CORP'}, "L & M BUS CORP.")
+multipleReplace(dataset, "Bus_Company_Name", {'LEESEL TRANSP CORP'}, "LEESEL TRANSPORTATION CORP")
+# TODO: Merge rest of Bus companies
 
 # Convert categorical into dummy variables
 dataset = variableToDummies(dataset, "Reason", "Delay_Reason", True)
 dataset = variableToDummies(dataset, "School_Age_or_PreK", "Education_level", True)
 dataset = variableToDummies(dataset, "Breakdown_or_Running_Late", "Delay_cause", True)
-dataset = variableToDummies(dataset, "Bus_Company_Name", "Bus_Company", False) # TODO: Check bus company names (duplicated)
-dataset = variableToDummies(dataset, "Boro", "NY_Boro", False) # TODO: Check exception on print data desc
+dataset = variableToDummies(dataset, "Bus_Company_Name", "Bus_Company", True) # TODO: Check bus company names (duplicated)
+dataset = variableToDummies(dataset, "Boro", "NY_Boro", True)
 dataset = variableToDummies(dataset, "Route_Number", "NY_Route", False)
 dataset = variableToDummies(dataset, "Bus_No", "Bus_Number", False)
 dataset = variableToDummies(dataset, "Run_Type", "Bus_Run_Type", True)
-dataset = variableToDummies(dataset, "School_Year", "NY_School_Year", False)
-# TODO: convert rest of categorical variables into dummy ;)
+dataset = variableToDummies(dataset, "School_Year", "NY_School_Year", True)
 
 dataset[["Schools_NOT_Notified", "Schools_Notified"]] = pd.get_dummies(dataset['Has_Contractor_Notified_Schools'])
 dataset[["Parents_NOT_Notified", "Parents_Notified"]] = pd.get_dummies(dataset['Has_Contractor_Notified_Parents'])
 dataset[["OPT_NOT_Alerted", "OPT_Alerted"]] = pd.get_dummies(dataset['Have_You_Alerted_OPT'])
+# TODO: Check is possible to not create temp "NOT" columns
 
 # Remove categorical variables
 dataset.drop(["Has_Contractor_Notified_Schools", "Schools_NOT_Notified",
               "Has_Contractor_Notified_Parents", "Parents_NOT_Notified",
               "Have_You_Alerted_OPT", "OPT_NOT_Alerted"], axis=1, inplace=True)
 
-# Delays time preprocessing
-# TODO: Preprocessing column with time of delays
+# Delays data preprocessing
+# TODO: Set-up the final data of the bus delays
+
+# Final dataset
+# TODO: Set the right order of dataset variables
 # ---------------------------------------------------- K-Means ---------------------------------------------------------
 # TODO: k-means clustering
 
