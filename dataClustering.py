@@ -3,8 +3,15 @@ import pandas as pd
 
 # -------------------------------------------------- Functions ---------------------------------------------------------
 # Convert categorical variable into dummies
-def variableToDummies(dataset, colname, finalName):
-    tempdummies = pd.get_dummies(dataset[colname], prefix="temp")
+def variableToDummies(dataset, colname, finalName, legend):
+    tempdummies = pd.get_dummies(dataset[colname])
+    if legend:
+        listposition = 1
+        print(finalName+":")
+        for i in tempdummies.columns:
+            print("\t", listposition, "- "+i)
+            listposition = listposition + 1
+
     element = 1
     for key, value in tempdummies.iterrows():
         for i, j in value.iteritems():
@@ -15,9 +22,11 @@ def variableToDummies(dataset, colname, finalName):
                 # print("Value added")
             element = element + 1
         element = 1
+
     tempdummies.fillna(0, inplace=True)
     dataset.drop([colname], axis=1, inplace=True)
     dataset[finalName] = tempdummies["temp_summary_272727"]
+
     return dataset
 
 # ------------------------------------------------- Data import --------------------------------------------------------
@@ -56,7 +65,7 @@ dataset.drop(["Incident_Number",
               "Informed_On", "Informed_On_Date"], axis=1, inplace=True)
 
 # Convert categorical into dummy variables
-dataset = variableToDummies(dataset, "Reason", "Delay_Reason")
+dataset = variableToDummies(dataset, "Reason", "Delay_Reason", True)
 # TODO: convert rest of categorical variables into dummy ;)
 
 dataset[["Schools_NOT_Notified", "Schools_Notified"]] = pd.get_dummies(dataset['Has_Contractor_Notified_Schools'])
