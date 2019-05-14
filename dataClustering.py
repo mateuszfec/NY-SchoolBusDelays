@@ -38,7 +38,7 @@ def multipleReplace(dataset, colname, phraseList, replace):
 # ------------------------------------------------- Data import --------------------------------------------------------
 # Sample data
 sampleData = True
-sampleHeight = 0.035
+sampleHeight = 0.0035
 
 # Full data
 fullData = pd.read_csv("data/bus-breakdown-and-delays.csv", dtype={"Incident_Number": str})
@@ -51,24 +51,17 @@ else:
 # print(dataset.count)
 
 # ---------------------------------------------- Data preprocessing ----------------------------------------------------
-# Split dates and time
+# Remove unused data
+dataset.drop(["Incident_Number", "Last_Updated_On", "Busbreakdown_ID", "Created_On", "Schools_Serviced"], axis=1, inplace=True)
+
+# Get basic info about event (dates and time)
 dataset[["Event_Date", "Occurred_On"]] = dataset["Occurred_On"].str.split("T", expand=True)
 dataset["Informed_On"] = dataset["Informed_On"].str.split("T", expand=True)[1]
 
-# Calculate difference between event occurred time and system creation time
+# Calculate time difference between occurred event and information
 dataset["Occurred_On"] = pd.to_datetime(dataset["Occurred_On"])
 dataset["Informed_On"] = pd.to_datetime(dataset["Informed_On"])
 dataset["Reaction_Time"] = dataset["Informed_On"] - dataset["Occurred_On"]
-
-# Set right format of the date type data
-# TODO: Set right type of the date data type variables (Occured_On, Created_On, Informed_On and Reaction_Time)
-
-# Remove unused data
-dataset.drop(["Incident_Number",
-              "Last_Updated_On",
-              "Busbreakdown_ID",
-              "Created_On",
-              "Schools_Serviced"], axis=1, inplace=True)
 
 # Bus corporation names unification
 dataset["Bus_Company_Name"] = dataset["Bus_Company_Name"].str.split("(", expand=True)[0]
@@ -110,16 +103,26 @@ dataset[["Parents_NOT_Notified", "Parents_Notified"]] = pd.get_dummies(dataset['
 dataset[["OPT_NOT_Alerted", "OPT_Alerted"]] = pd.get_dummies(dataset['Have_You_Alerted_OPT'])
 # TODO: Check is possible to not create temp "NOT" columns
 
-# Remove categorical variables
+# Remove categorical and dummy helper variables
 dataset.drop(["Has_Contractor_Notified_Schools", "Schools_NOT_Notified",
               "Has_Contractor_Notified_Parents", "Parents_NOT_Notified",
               "Have_You_Alerted_OPT", "OPT_NOT_Alerted"], axis=1, inplace=True)
 
+# Set right format of the date type data
+dataset[["School_Year", "School_Level", "Delay_Reason", "Delay_Result", "Boro", "Route_Number", "Bus_Company",
+         "Bus_Number", "Bus_Run_Type"]] = dataset[["School_Year", "School_Level", "Delay_Reason", "Delay_Result",
+                                                   "Boro", "Route_Number", "Bus_Company", "Bus_Number",
+                                                   "Bus_Run_Type"]].astype(int)
+
+# TODO: Set right type of the date data type variables (Event_Date, Occured_On, Informed_On and Reaction_Time)
+
 # Delays data preprocessing
 # TODO: Set-up the final data of the bus delays
 
-# Final dataset
+# Final dataset structure
 dataset = dataset.rename(columns={'Number_Of_Students_On_The_Bus': 'Students_Number'})
+dataset["Students_Number"] = dataset["Students_Number"].astype(int)
+
 dataset = dataset[['How_Long_Delayed',
                    'Event_Date',
                    'Occurred_On',
@@ -138,6 +141,9 @@ dataset = dataset[['How_Long_Delayed',
                    'OPT_Alerted',
                    'Schools_Notified',
                    'Parents_Notified']]
+
+print(dataset.dtypes)
+
 # ---------------------------------------------------- K-Means ---------------------------------------------------------
 # TODO: k-means clustering
 
