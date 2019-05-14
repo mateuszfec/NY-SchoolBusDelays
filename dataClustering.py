@@ -38,7 +38,7 @@ def multipleReplace(dataset, colname, phraseList, replace):
 # ------------------------------------------------- Data import --------------------------------------------------------
 # Sample data
 sampleData = True
-sampleHeight = 0.0035
+sampleHeight = 0.035
 
 # Full data
 fullData = pd.read_csv("data/bus-breakdown-and-delays.csv", dtype={"Incident_Number": str})
@@ -114,7 +114,8 @@ dataset[["School_Year", "School_Level", "Delay_Reason", "Delay_Result", "Boro", 
                                                    "Boro", "Route_Number", "Bus_Company", "Bus_Number",
                                                    "Bus_Run_Type"]].astype(int)
 
-# TODO: Set right type of the date data type variables (Event_Date, Occured_On, Informed_On and Reaction_Time)
+dataset["Occurred_On"] = pd.to_datetime(dataset["Occurred_On"], format="%H:%M:%S").dt.time
+dataset["Informed_On"] = pd.to_datetime(dataset["Informed_On"], format="%H:%M:%S").dt.time
 
 # Delays data preprocessing
 # TODO: Set-up the final data of the bus delays
@@ -142,7 +143,7 @@ dataset = dataset[['How_Long_Delayed',
                    'Schools_Notified',
                    'Parents_Notified']]
 
-print(dataset.dtypes)
+# print(dataset.dtypes)
 
 # ---------------------------------------------------- K-Means ---------------------------------------------------------
 # TODO: k-means clustering
@@ -151,5 +152,3 @@ print(dataset.dtypes)
 # TODO: affinity propagation
 
 print("END")
-
-
