@@ -53,13 +53,12 @@ else:
 # ---------------------------------------------- Data preprocessing ----------------------------------------------------
 # Split dates and time
 dataset[["Event_Date", "Occurred_On"]] = dataset["Occurred_On"].str.split("T", expand=True)
-dataset["Created_On"] = dataset["Created_On"].str.split("T", expand=True)[1]
 dataset["Informed_On"] = dataset["Informed_On"].str.split("T", expand=True)[1]
 
 # Calculate difference between event occurred time and system creation time
 dataset["Occurred_On"] = pd.to_datetime(dataset["Occurred_On"])
-dataset["Created_On"] = pd.to_datetime(dataset["Created_On"])
-dataset["Reaction_Time"] = dataset["Created_On"] - dataset["Occurred_On"]
+dataset["Informed_On"] = pd.to_datetime(dataset["Informed_On"])
+dataset["Reaction_Time"] = dataset["Informed_On"] - dataset["Occurred_On"]
 
 # Set right format of the date type data
 # TODO: Set right type of the date data type variables (Occured_On, Created_On, Informed_On and Reaction_Time)
@@ -68,6 +67,7 @@ dataset["Reaction_Time"] = dataset["Created_On"] - dataset["Occurred_On"]
 dataset.drop(["Incident_Number",
               "Last_Updated_On",
               "Busbreakdown_ID",
+              "Created_On",
               "Schools_Serviced"], axis=1, inplace=True)
 
 # Bus corporation names unification
@@ -96,14 +96,14 @@ multipleReplace(dataset, "Bus_Company_Name", {'THOMAS BUSES, INC.'}, "THOMAS BUS
 
 # Convert categorical into dummy variables
 dataset = variableToDummies(dataset, "Reason", "Delay_Reason", True)
-dataset = variableToDummies(dataset, "School_Age_or_PreK", "Education_level", True)
-dataset = variableToDummies(dataset, "Breakdown_or_Running_Late", "Delay_cause", True)
+dataset = variableToDummies(dataset, "School_Age_or_PreK", "School_Level", True)
+dataset = variableToDummies(dataset, "Breakdown_or_Running_Late", "Delay_Result", True)
 dataset = variableToDummies(dataset, "Bus_Company_Name", "Bus_Company", True)
-dataset = variableToDummies(dataset, "Boro", "NY_Boro", True)
-dataset = variableToDummies(dataset, "Route_Number", "NY_Route", False)
+dataset = variableToDummies(dataset, "Boro", "Boro", True)
+dataset = variableToDummies(dataset, "Route_Number", "Route_Number", False)
 dataset = variableToDummies(dataset, "Bus_No", "Bus_Number", False)
 dataset = variableToDummies(dataset, "Run_Type", "Bus_Run_Type", True)
-dataset = variableToDummies(dataset, "School_Year", "NY_School_Year", True)
+dataset = variableToDummies(dataset, "School_Year", "School_Year", True)
 
 dataset[["Schools_NOT_Notified", "Schools_Notified"]] = pd.get_dummies(dataset['Has_Contractor_Notified_Schools'])
 dataset[["Parents_NOT_Notified", "Parents_Notified"]] = pd.get_dummies(dataset['Has_Contractor_Notified_Parents'])
@@ -119,7 +119,25 @@ dataset.drop(["Has_Contractor_Notified_Schools", "Schools_NOT_Notified",
 # TODO: Set-up the final data of the bus delays
 
 # Final dataset
-# TODO: Set the right order of dataset variables
+dataset = dataset.rename(columns={'Number_Of_Students_On_The_Bus': 'Students_Number'})
+dataset = dataset[['How_Long_Delayed',
+                   'Event_Date',
+                   'Occurred_On',
+                   'Informed_On',
+                   'Reaction_Time',
+                   'Students_Number',
+                   'School_Year',
+                   'School_Level',
+                   'Delay_Reason',
+                   'Delay_Result',
+                   'Boro',
+                   'Route_Number',
+                   'Bus_Company',
+                   'Bus_Number',
+                   'Bus_Run_Type',
+                   'OPT_Alerted',
+                   'Schools_Notified',
+                   'Parents_Notified']]
 # ---------------------------------------------------- K-Means ---------------------------------------------------------
 # TODO: k-means clustering
 
