@@ -42,8 +42,10 @@ def multipleReplace(dataset, colname, phraseList, replace):
 
 # ------------------------------------------------- Data import --------------------------------------------------------
 # Sample data
-sampleData = True
+sampleData = False
 sampleHeight = 0.035
+delaysOutliers = 6
+studentsOutliers = 3
 
 # Full data
 fullData = pd.read_csv("data/bus-breakdown-and-delays.csv", dtype={"Incident_Number": str})
@@ -102,6 +104,7 @@ dataset = variableToDummies(dataset, "Route_Number", "Route_Number", False)
 dataset = variableToDummies(dataset, "Bus_No", "Bus_Number", False)
 dataset = variableToDummies(dataset, "Run_Type", "Bus_Run_Type", True)
 dataset = variableToDummies(dataset, "School_Year", "School_Year", True)
+# todo: remove school year 2019/2020 from dataset
 
 dataset[["Schools_NOT_Notified", "Schools_Notified"]] = pd.get_dummies(dataset['Has_Contractor_Notified_Schools'])
 dataset[["Parents_NOT_Notified", "Parents_Notified"]] = pd.get_dummies(dataset['Has_Contractor_Notified_Parents'])
@@ -241,42 +244,57 @@ dataset = dataset[['Bus_Delay',
 
 # ------------------------------------- Removing outliers using Z-Score method -----------------------------------------
 # Info about the data BEFORE outlier detection
-# print("Dataset dimension BEFORE:", dataset.shape)
+print("Dataset dimension BEFORE:", dataset.shape)
 
-# plt.boxplot(dataset['Bus_Delay'], vert=False)
-# plt.title("Bus delay box-plot BEFORE")
-# plt.xlabel('values')
-# plt.show()
-
-# plt.boxplot(dataset['Students_Number'], vert=False)
-# plt.title("Students number box-plot BEFORE")
-# plt.xlabel('values')
-# plt.show()
+plt.boxplot(dataset['Bus_Delay'], vert=False)
+plt.title("Bus delay box-plot BEFORE")
+plt.xlabel('values')
+plt.savefig('analysis-results/Bus_Delay outliers BEFORE.png', bbox_inches='tight', dpi=100)
+plt.show()
+# todo: Move plots into function
+plt.boxplot(dataset['Students_Number'], vert=False)
+plt.title("Students number box-plot BEFORE")
+plt.xlabel('values')
+plt.savefig('analysis-results/Students_Number outliers BEFORE.png', bbox_inches='tight', dpi=100)
+plt.show()
 
 # Detect and remove outliers from Bus_Delay
 zscoreDelays = np.abs(stats.zscore(dataset['Bus_Delay']))
-dataset = dataset[(zscoreDelays < 6)]
+if sampleData:
+    dataset = dataset[(zscoreDelays < delaysOutliers)]
+else:
+    dataset = dataset[(zscoreDelays < 0.85)]
 del zscoreDelays
 
 # Detect and remove outliers from Students_Number
 zscoreStudents = np.abs(stats.zscore(dataset['Students_Number']))
-dataset = dataset[(zscoreStudents < 3)]
+if sampleData:
+    dataset = dataset[(zscoreStudents < studentsOutliers)]
+else:
+    dataset = dataset[(zscoreStudents < 0.85)]
 del zscoreStudents
 
 # Info about the data AFTER outlier detection
-# print("Dataset dimension AFTER:", dataset.shape)
+print("Dataset dimension AFTER:", dataset.shape)
 
-# plt.boxplot(dataset['Bus_Delay'], vert=False)
-# plt.title("Bus delay box-plot AFTER")
-# plt.xlabel('values')
-# plt.show()
+plt.boxplot(dataset['Bus_Delay'], vert=False)
+plt.title("Bus delay box-plot AFTER")
+plt.xlabel('values')
+plt.savefig('analysis-results/Bus_Delay outliers AFTER.png', bbox_inches='tight', dpi=100)
+plt.show()
 
-# plt.boxplot(dataset['Students_Number'], vert=False)
-# plt.title("Students number box-plot AFTER")
-# plt.xlabel('values')
-# plt.show()
+plt.boxplot(dataset['Students_Number'], vert=False)
+plt.title("Students number box-plot AFTER")
+plt.xlabel('values')
+plt.savefig('analysis-results/Students_Number outliers AFTER.png', bbox_inches='tight', dpi=100)
+plt.show()
+
+# todo: Think about dataset rows with Bus_Delay 0 value
 
 # -------------------------------------------------- Export data -------------------------------------------------------
-dataset.to_csv("data/final-data.csv", sep=',', index=False, encoding='utf-8')
+if sampleData:
+    dataset.to_csv("data/final-data.csv", sep=',', index=False, encoding='utf-8')
+else:
+    dataset.to_csv("data/full-data.csv", sep=',', index=False, encoding='utf-8')
 
 print("END")

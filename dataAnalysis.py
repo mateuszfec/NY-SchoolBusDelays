@@ -1,7 +1,8 @@
 # Libraries
 import pandas as pd
+import matplotlib.pyplot as plt
 
-dataset = pd.read_csv("data/final-data.csv")
+dataset = pd.read_csv("data/full-data.csv")
 
 # Descriptive statistics df
 DS = pd.DataFrame(columns=['Mean',
@@ -26,5 +27,17 @@ DS.loc['Students_Number'] = [dataset['Students_Number'].mean(),
                              dataset['Students_Number'].kurt(),
                              dataset['Students_Number'].min(),
                              dataset['Students_Number'].max()]
+
+# plt.boxplot(dataset['Bus_Delay'], vert=False)
+# plt.title("Bus delay box-plot")
+# plt.xlabel('values')
+# plt.savefig('analysis-results/Bus_Delay outliers.png', bbox_inches='tight', dpi=100)
+# plt.show()
+
+# plt.boxplot(dataset['Students_Number'], vert=False)
+# plt.title("Students number box-plot")
+# plt.xlabel('values')
+# plt.savefig('analysis-results/Students_Number outliers.png', bbox_inches='tight', dpi=100)
+# plt.show()
 
 print("END")
