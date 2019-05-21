@@ -1,6 +1,8 @@
 # Libraries
 import pandas as pd
 import numpy as np
+from scipy import stats
+import matplotlib.pyplot as plt
 import re
 
 # -------------------------------------------------- Functions ---------------------------------------------------------
@@ -237,8 +239,42 @@ dataset = dataset[['Bus_Delay',
 
 # print(dataset.dtypes)
 
-# ------------------------------------------------- Data analysis ------------------------------------------------------
-# TODO: Basic statistics, remove outliers
+# ------------------------------------- Removing outliers using Z-Score method -----------------------------------------
+# Info about the data BEFORE outlier detection
+# print("Dataset dimension BEFORE:", dataset.shape)
+
+# plt.boxplot(dataset['Bus_Delay'], vert=False)
+# plt.title("Bus delay box-plot BEFORE")
+# plt.xlabel('values')
+# plt.show()
+
+# plt.boxplot(dataset['Students_Number'], vert=False)
+# plt.title("Students number box-plot BEFORE")
+# plt.xlabel('values')
+# plt.show()
+
+# Detect and remove outliers from Bus_Delay
+zscoreDelays = np.abs(stats.zscore(dataset['Bus_Delay']))
+dataset = dataset[(zscoreDelays < 6)]
+del zscoreDelays
+
+# Detect and remove outliers from Students_Number
+zscoreStudents = np.abs(stats.zscore(dataset['Students_Number']))
+dataset = dataset[(zscoreStudents < 3)]
+del zscoreStudents
+
+# Info about the data AFTER outlier detection
+# print("Dataset dimension AFTER:", dataset.shape)
+
+# plt.boxplot(dataset['Bus_Delay'], vert=False)
+# plt.title("Bus delay box-plot AFTER")
+# plt.xlabel('values')
+# plt.show()
+
+# plt.boxplot(dataset['Students_Number'], vert=False)
+# plt.title("Students number box-plot AFTER")
+# plt.xlabel('values')
+# plt.show()
 
 # -------------------------------------------------- Export data -------------------------------------------------------
 dataset.to_csv("data/final-data.csv", sep=',', index=False, encoding='utf-8')
