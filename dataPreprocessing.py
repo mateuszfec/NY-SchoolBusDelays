@@ -42,7 +42,7 @@ def multipleReplace(dataset, colname, phraseList, replace):
 
 # ------------------------------------------------- Data import --------------------------------------------------------
 # Sample data
-sampleData = False
+sampleData = True
 sampleHeight = 0.035
 delaysOutliers = 6
 studentsOutliers = 3
@@ -73,13 +73,14 @@ dataset["Reaction_Time"] = dataset["Informed_On"] - dataset["Occurred_On"]
 # Bus corporation names unification
 dataset["Bus_Company_Name"] = dataset["Bus_Company_Name"].str.split("(", expand=True)[0]
 dataset["Bus_Company_Name"] = dataset["Bus_Company_Name"].str.strip()
+multipleReplace(dataset, "Bus_Company_Name", {'`', 'Ms.', '1967', '1992'}, "Unknown")
 multipleReplace(dataset, "Bus_Company_Name", {'ALL AMERICAN SCHOOL BUS C'}, "ALL AMERICAN SCHOOL BUS CORP.")
 multipleReplace(dataset, "Bus_Company_Name", {'CAREFUL BUS'}, "CAREFUL BUS SERVICE INC")
 multipleReplace(dataset, "Bus_Company_Name", {'CONSOLIDATED BUS TRANS. I', 'CONSOLIDATED BUS TRANSIT, INC.'}, "CONSOLIDATED BUS TRANS. INC.")
-multipleReplace(dataset, "Bus_Company_Name", {'Don Thomas Buses'}, "DON THOMAS BUSES, INC.")
+multipleReplace(dataset, "Bus_Company_Name", {'Don Thomas Buses', 'DON THOMAS BUSES'}, "DON THOMAS BUSES, INC.")
 multipleReplace(dataset, "Bus_Company_Name", {'EMPIRE CHARTER SERVICE IN'}, "EMPIRE CHARTER SERVICE INC")
 multipleReplace(dataset, "Bus_Company_Name", {'FIRST STEPS', 'FIRST STEPS TRANS, INC', 'FIRST STEPS TRANSP INC.'}, "FIRST STEPS TRANS INC.")
-multipleReplace(dataset, "Bus_Company_Name", {'G.V.C., LTD.'}, "G.V.C. LTD.")
+multipleReplace(dataset, "Bus_Company_Name", {'G.V.C., LTD.', 'GVC LTD.'}, "G.V.C. LTD.")
 multipleReplace(dataset, "Bus_Company_Name", {'L & M BUS CORP'}, "L & M BUS CORP.")
 multipleReplace(dataset, "Bus_Company_Name", {'LEESEL TRANSP CORP'}, "LEESEL TRANSPORTATION CORP")
 multipleReplace(dataset, "Bus_Company_Name", {'LOGAN TRANSPORTATION SYST'}, "LOGAN TRANSPORTATION SYSTEMS")
@@ -90,21 +91,26 @@ multipleReplace(dataset, "Bus_Company_Name", {'MONTAUK STUDENT TRANS, IN'}, "MON
 multipleReplace(dataset, "Bus_Company_Name", {'PIONEER TRANSPORTATION CO'}, "PIONEER TRANSPORTATION CORP")
 multipleReplace(dataset, "Bus_Company_Name", {'QUALITY TRANSPORTATION CO'}, "QUALITY TRANSPORTATION CORP.")
 multipleReplace(dataset, "Bus_Company_Name", {'RELIANT TRANS, INC.'}, "RELIANT TRANSPORTATION, INC")
-multipleReplace(dataset, "Bus_Company_Name", {'SELBY TRANS CORP.','SELBY TRANSPORTATION'}, "SELBY TRANSPORTATION CORP")
+multipleReplace(dataset, "Bus_Company_Name", {'SELBY TRANS CORP.', 'SELBY TRANSPORTATION'}, "SELBY TRANSPORTATION CORP")
+multipleReplace(dataset, "Bus_Company_Name", {'SMART PICK'}, "SMART PICK INC")
+multipleReplace(dataset, "Bus_Company_Name", {'phillip bus service'}, "PHILLIPS BUS SERVICE")
 multipleReplace(dataset, "Bus_Company_Name", {'THIRD AVENUE TRANSIT'}, "THIRD AVENUE TRANSIT, INC")
 multipleReplace(dataset, "Bus_Company_Name", {'THOMAS BUSES, INC.'}, "THOMAS BUSES INC")
 
 # Convert categorical into dummy variables
+multipleReplace(dataset, "Reason", {'0'}, "Unknown")
 dataset = variableToDummies(dataset, "Reason", "Delay_Reason", True)
 dataset = variableToDummies(dataset, "School_Age_or_PreK", "School_Level", True)
 dataset = variableToDummies(dataset, "Breakdown_or_Running_Late", "Delay_Result", True)
 dataset = variableToDummies(dataset, "Bus_Company_Name", "Bus_Company", True)
+multipleReplace(dataset, "Boro", {0}, "Unknown")
 dataset = variableToDummies(dataset, "Boro", "Boro", True)
 dataset = variableToDummies(dataset, "Route_Number", "Route_Number", False)
 dataset = variableToDummies(dataset, "Bus_No", "Bus_Number", False)
+multipleReplace(dataset, "Run_Type", {'0'}, "Unknown")
 dataset = variableToDummies(dataset, "Run_Type", "Bus_Run_Type", True)
+dataset = dataset[dataset['School_Year'] != '2019-2020']
 dataset = variableToDummies(dataset, "School_Year", "School_Year", True)
-# todo: remove school year 2019/2020 from dataset
 
 dataset[["Schools_NOT_Notified", "Schools_Notified"]] = pd.get_dummies(dataset['Has_Contractor_Notified_Schools'])
 dataset[["Parents_NOT_Notified", "Parents_Notified"]] = pd.get_dummies(dataset['Has_Contractor_Notified_Parents'])
@@ -216,6 +222,7 @@ del minutes, minutesAverage, r, regmatch
 dataset["Bus_Delay"] = dataset["Delay_From_Hours"] + dataset["Delay_From_Minutes"] + dataset["Avg_From_Minutes"]
 dataset["Bus_Delay"] = dataset["Bus_Delay"].astype(int)
 dataset.drop(["How_Long_Delayed", "Delay_From_Hours", "Delay_From_Minutes", "Avg_From_Minutes"], axis=1, inplace=True)
+dataset = dataset[dataset['Bus_Delay'] != 0]
 
 # Final dataset structure
 dataset = dataset.rename(columns={'Number_Of_Students_On_The_Bus': 'Students_Number'})
@@ -263,7 +270,7 @@ zscoreDelays = np.abs(stats.zscore(dataset['Bus_Delay']))
 if sampleData:
     dataset = dataset[(zscoreDelays < delaysOutliers)]
 else:
-    dataset = dataset[(zscoreDelays < 0.85)]
+    dataset = dataset[(zscoreDelays < 0.75)]
 del zscoreDelays
 
 # Detect and remove outliers from Students_Number
@@ -271,7 +278,7 @@ zscoreStudents = np.abs(stats.zscore(dataset['Students_Number']))
 if sampleData:
     dataset = dataset[(zscoreStudents < studentsOutliers)]
 else:
-    dataset = dataset[(zscoreStudents < 0.85)]
+    dataset = dataset[(zscoreStudents < 0.80)]
 del zscoreStudents
 
 # Info about the data AFTER outlier detection
@@ -288,8 +295,6 @@ plt.title("Students number box-plot AFTER")
 plt.xlabel('values')
 plt.savefig('analysis-results/Students_Number outliers AFTER.png', bbox_inches='tight', dpi=100)
 plt.show()
-
-# todo: Think about dataset rows with Bus_Delay 0 value
 
 # -------------------------------------------------- Export data -------------------------------------------------------
 if sampleData:
