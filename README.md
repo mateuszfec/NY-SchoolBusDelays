@@ -1,5 +1,5 @@
-# Akademia Górniczo Hutnicza im. Stanisława Staszica w Krakowie
-# Wydział Zarządzania
+## Akademia Górniczo Hutnicza im. Stanisława Staszica w Krakowie
+## Wydział Zarządzania
 ## Kierunek: Informatyka i Ekonometria
 ## Uczenie maszynowe - projekt zaliczeniowy
 ## Temat:  School bus delays in New York - Data analysis (clustering)
