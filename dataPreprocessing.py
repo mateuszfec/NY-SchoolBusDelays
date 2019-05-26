@@ -42,7 +42,7 @@ def multipleReplace(dataset, colname, phraseList, replace):
 
 # ------------------------------------------------- Data import --------------------------------------------------------
 # Sample data
-sampleData = True
+sampleData = False
 sampleHeight = 0.035
 delaysOutliers = 6
 studentsOutliers = 3
