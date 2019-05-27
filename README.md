@@ -1,16 +1,15 @@
-## Akademia Górniczo Hutnicza im. Stanisława Staszica w Krakowie
-## Wydział Zarządzania
-## Kierunek: Informatyka i Ekonometria
-## Uczenie maszynowe - projekt zaliczeniowy
-## Temat:  School bus delays in New York - Data analysis (clustering)
-## Prowadzący: dr inż. Maciej Wielgosz, dr inż. Marcin Pietroń
-## Opracowali: Mateusz Feć, Patryk Zieliński
-### Kraków 2019
+## School bus delays in New York - Data analysis (clustering) [PL]
 
-## Wprowadzenie i opis danych
-Celem projektu jest wykorzystanie metod analizy skupień do przeanalizowania opóźnień autobusów szkolnych w Nowym Jorku. (**COŚ TU JESZCZE MOŻNA DODAĆ**)
+##### Akademia Górniczo Hutnicza im. Stanisława Staszica w Krakowie
+##### Wydział Zarządzania, Informatyka i Ekonometria, Uczenie maszynowe
+###### Prowadzący: dr inż. Maciej Wielgosz, dr inż. Marcin Pietroń
+###### Opracowanie: Mateusz Feć, Patryk Zieliński, Kraków 2019
+
+## Wprowadzenie
+Celem projektu jest wykorzystanie metod analizy skupień do przeanalizowania powodów, przyczyn oraz efektów opóźnień autobusów szkolnych w Nowm Jorku. Dane pochodzą z serwisu [Kaggle](https://www.kaggle.com/new-york-city/ny-bus-breakdown-and-delays) na licencji [CCO public domain](https://creativecommons.org/share-your-work/public-domain/cc0/). Szczegółowy opis danych znajduje się poniżej.
+
 ## Opis danych
-1. Zmienne kategoryczne
+1. **Zmienne kategoryczne**
     * Delay_Reason - zmienna kategoryczna przyjmująca wartość **1** w sytuacji, gdy nie wystąpiło opóźnienie oraz wartości **2-11** w zależności od rozpoznanych przyczyn awarii,tj.:
         wypadek, korek, usterka mechaniczna, warunki pogodowe, brak możliwości uruchomienia zapłonu itp.
     * School_Year
@@ -24,19 +23,24 @@ Celem projektu jest wykorzystanie metod analizy skupień do przeanalizowania op�
     * OPT_Alerted
     * Schools_Notified - zmienna binarna przyjmująca wartość **1** w sytuacji, gdy szkoła został poinformowana o opóźnieniu autobusu oraz **0** w pozostałych przypadkach
     * Parents_Notified - zmienna binarna przyjmująca wartość **1** w sytuacji, gdy rodzice zostali poinformowani o opóźnieniu autobusu oraz **0** w pozostałych przypadkach
-2. Zmienne ciągłe
+2. **Zmienne ciągłe**
     * Bus_Delay - czas opóźnienia autobusu
     * Event_Date - data wystąpienia opóźnienia
     * Occurred_On - czas wystąpienia opóźnienia
     * Informed_On - czas poinformowania pasażerów o opóźnieniu
     * Reaction_Time - czas reakcji liczony jako czas pomiędzy czasem wystąpienia opóźnienia a czasem poinformowania pasażerów
     * Students_Number - liczba uczniów znajdujących się w autobusie w momencie wystąpienia opóźnienia
-## Hipotezy badawcze (? - najlepiej to na samym końcu dać pod warunkiem że chcemy)
+## Hipotezy badawcze
+[comment]: <> (todo)
 ## Stosowane metody
 1. Metoda k-średnich
-2. Affinity propagation (czy zmieniamy ?)
+2. Affinity propagation 
+
+[comment]: <> (todo: zastanowic sie nad finalnie uzywanymi metodami)
 ## Otrzymane wyniki
+[comment]: <> (todo)
 ## Podsumowanie 
+[comment]: <> (todo)
 
 
 
