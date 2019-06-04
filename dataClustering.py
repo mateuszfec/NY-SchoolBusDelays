@@ -1,8 +1,12 @@
 # Libraries
+import numpy as np
 import pandas as pd
-from sklearn.cluster import KMeans, AffinityPropagation
+from sklearn.cluster import KMeans, AffinityPropagation, MeanShift, estimate_bandwidth
 import matplotlib.pyplot as plt
 from itertools import cycle
+import time
+
+startTime = time.time()
 
 dataset = pd.read_csv("data/mini-data.csv")
 
@@ -10,9 +14,12 @@ X = dataset[['Bus_Run_Type', 'Bus_Delay']].values
 
 algorithmKMeans = True
 algorithmAffProp = True
+algorithmMeanShift = True
 
 # ---------------------------------------------------- K-Means ---------------------------------------------------------
 if algorithmKMeans:
+    startTimeKMeans = time.time()
+
     # Calculate (by Elbow Method) the best count of clusters
     wcss = []
     for i in range(1, 11):
@@ -46,9 +53,12 @@ if algorithmKMeans:
     plt.ylabel(X[1])
     plt.legend()
     plt.show()
+    endTimeKMeans = time.time()
 
 # ----------------------------------------------- Affinity Propagation -------------------------------------------------
 if algorithmAffProp:
+    startTimeAffinity = time.time()
+
     # Compute Affinity Propagation
     af = AffinityPropagation(preference=-150).fit(X)
     cluster_centers_indices = af.cluster_centers_indices_
@@ -56,7 +66,7 @@ if algorithmAffProp:
 
     # Calculate number of clusters
     n_clusters_ = len(cluster_centers_indices)
-    print('Estimated number of clusters: %d' % n_clusters_)
+    #print('Estimated number of clusters: %d' % n_clusters_)
 
     # Plot results
     plt.close('all')
@@ -77,3 +87,48 @@ if algorithmAffProp:
     plt.xlabel(X[0])
     plt.ylabel(X[1])
     plt.show()
+    endTimeAffinity = time.time()
+
+# --------------------------------------------------- Mean-Shift -------------------------------------------------------
+if algorithmMeanShift:
+    startTimeMeanShift = time.time()
+
+    # Compute clustering with MeanShift
+    bandwidth = estimate_bandwidth(X, quantile=0.2, n_samples=500)
+
+    ms = MeanShift(bandwidth=bandwidth, bin_seeding=True)
+    ms.fit(X)
+    labels = ms.labels_
+    cluster_centers = ms.cluster_centers_
+
+    # Calculate number of clusters
+    labels_unique = np.unique(labels)
+    n_clusters_ = len(labels_unique)
+    #print("number of estimated clusters : %d" % n_clusters_)
+
+    # Plot result
+    plt.figure(1)
+    plt.clf()
+
+    colors = cycle('bgrcmykbgrcmykbgrcmykbgrcmyk')
+    for k, col in zip(range(n_clusters_), colors):
+        my_members = labels == k
+        cluster_center = cluster_centers[k]
+        plt.plot(X[my_members, 0], X[my_members, 1], col + '.')
+        plt.plot(cluster_center[0], cluster_center[1], 'o', markerfacecolor=col,
+                 markeredgecolor='k', markersize=14)
+    plt.title('Estimated number of clusters: %d' % n_clusters_)
+    plt.show()
+    endTimeMeanShift = time.time()
+
+# Script time measurement
+endTime = time.time()
+
+if algorithmKMeans:
+    print('K-Means exec time: ', round(endTimeKMeans - startTimeKMeans, 2), 's')
+if algorithmAffProp:
+    print('Affinity Propagation exec time: ', round(endTimeAffinity - startTimeAffinity, 2), 's')
+if algorithmMeanShift:
+    print('Mean-Shift exec time: ', round(endTimeMeanShift - startTimeMeanShift, 2), 's')
+
+print('Summary exec time: ', round(endTime - startTime, 2), 's')
