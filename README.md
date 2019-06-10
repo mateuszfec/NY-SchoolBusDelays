@@ -1,9 +1,7 @@
 ## School bus delays in New York - Data analysis (clustering) [PL]
 
-##### Akademia Górniczo Hutnicza im. Stanisława Staszica w Krakowie
-##### Wydział Zarządzania, Informatyka i Ekonometria, Uczenie maszynowe
-###### Prowadzący: dr inż. Maciej Wielgosz, dr inż. Marcin Pietroń
-###### Opracowanie: Mateusz Feć, Patryk Zieliński, Kraków 2019
+##### Akademia Górniczo Hutnicza im. Stanisława Staszica w Krakowie <br> Wydział Zarządzania, Informatyka i Ekonometria, Uczenie maszynowe
+###### Prowadzący: dr inż. Maciej Wielgosz, dr inż. Marcin Pietroń <br> Opracowanie: Mateusz Feć, Patryk Zieliński, Kraków 2019
 
 ## Wprowadzenie
 Celem projektu jest wykorzystanie metod analizy skupień do przeanalizowania powodów, przyczyn oraz efektów opóźnień autobusów szkolnych w Nowm Jorku. Dane pochodzą z serwisu [Kaggle](https://www.kaggle.com/new-york-city/ny-bus-breakdown-and-delays) na licencji [CCO public domain](https://creativecommons.org/share-your-work/public-domain/cc0/). Szczegółowy opis danych znajduje się poniżej.
@@ -32,13 +30,34 @@ Celem projektu jest wykorzystanie metod analizy skupień do przeanalizowania pow
     * Students_Number - liczba uczniów znajdujących się w autobusie w momencie wystąpienia opóźnienia
 ## Hipotezy badawcze
 [comment]: <> (todo)
-## Stosowane metody
-1. Metoda k-średnich
-2. Affinity propagation 
+
+## Stosowane algorytmy
+1. [Metoda k-średnich](https://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html)
+2. [Affinity propagation](https://scikit-learn.org/stable/modules/generated/sklearn.cluster.AffinityPropagation.html)
+3. [MeanShift](https://scikit-learn.org/stable/modules/generated/sklearn.cluster.MeanShift.html)
 
 [comment]: <> (todo: zastanowic sie nad finalnie uzywanymi metodami)
 ## Otrzymane wyniki
-[comment]: <> (todo)
+Poniższa tabela przedstawia analizę porównawczą czasów wykonywania badanych algorytmów klasteryzacji w zależności od wielkości próbki danych.*
+
+| Algorytm             | Sample 10%    |  Sample 25% | Sample 50% | Sample 75% | Sample 100% |
+|----------------------|:-------------:|------------:|-----------:|-----------:|------------:|
+| Metoda k-średnich    |    xx.xxs     |   xx.xxs    |   xx.xxs   |   xx.xxs   |   xx.xxs    |
+| Affinity propagation |    xx.xxs     |   xx.xxs    |   xx.xxs   |   xx.xxs   |   xx.xxs    |
+| MeanShift            |    xx.xxs     |   xx.xxs    |   xx.xxs   |   xx.xxs   |   xx.xxs    |
+
+Poniższa tabela przedstawia analizę porównawczą liczby klastrów jakie zostały wyodrębnione przez poszczególne algorytmy w zależności od wielkości próbki danych.*
+
+| Algorytm             | Sample 10%    |  Sample 25% | Sample 50% | Sample 75% | Sample 100% |
+|----------------------|:-------------:|------------:|-----------:|-----------:|------------:|
+| Metoda k-średnich    |    xx         |   xx        |   xx       |       xx   |   xx        |
+| Affinity propagation |    xx         |   xx        |   xx       |   xx       |   xx        |
+| MeanShift            |    xx         |   xx        |       xx   |   xx       |       xx    |
+
+*Wszystkie wartości czasowe oraz liczbowe zostały uzyskane na jednolitym środowisku testowym o architekturze 64-bitowej.
+
+[comment]: <> (todo: Wykresy/ploty w jakimś dobrym ułożeniu)
+
 ## Podsumowanie 
 [comment]: <> (todo)
 

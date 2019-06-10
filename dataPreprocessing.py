@@ -31,7 +31,6 @@ def variableToDummies(dataset, colname, finalName, legend):
     tempdummies.fillna(0, inplace=True)
     dataset.drop([colname], axis=1, inplace=True)
     dataset[finalName] = tempdummies["temp_summary_272727"]
-    # TODO: Check is possible to return column with datatype (int32)
     return dataset
 
 # String multi-replacement
@@ -42,10 +41,10 @@ def multipleReplace(dataset, colname, phraseList, replace):
 
 # ------------------------------------------------- Data import --------------------------------------------------------
 # Sample data
-sampleData = False
-sampleHeight = 0.035
-delaysOutliers = 6
-studentsOutliers = 3
+sampleData = True
+sampleHeight = 0.1
+delaysOutliers = 3
+studentsOutliers = 6
 
 # Full data
 fullData = pd.read_csv("data/bus-breakdown-and-delays.csv", dtype={"Incident_Number": str})
@@ -115,7 +114,6 @@ dataset = variableToDummies(dataset, "School_Year", "School_Year", True)
 dataset[["Schools_NOT_Notified", "Schools_Notified"]] = pd.get_dummies(dataset['Has_Contractor_Notified_Schools'])
 dataset[["Parents_NOT_Notified", "Parents_Notified"]] = pd.get_dummies(dataset['Has_Contractor_Notified_Parents'])
 dataset[["OPT_NOT_Alerted", "OPT_Alerted"]] = pd.get_dummies(dataset['Have_You_Alerted_OPT'])
-# TODO: Check is possible to not create temp "NOT" columns
 
 # Remove categorical and dummy helper variables
 dataset.drop(["Has_Contractor_Notified_Schools", "Schools_NOT_Notified",
@@ -258,7 +256,7 @@ plt.title("Bus delay box-plot BEFORE")
 plt.xlabel('values')
 plt.savefig('analysis-results/Bus_Delay outliers BEFORE.png', bbox_inches='tight', dpi=100)
 plt.show()
-# todo: Move plots into function
+
 plt.boxplot(dataset['Students_Number'], vert=False)
 plt.title("Students number box-plot BEFORE")
 plt.xlabel('values')
@@ -298,7 +296,7 @@ plt.show()
 
 # -------------------------------------------------- Export data -------------------------------------------------------
 if sampleData:
-    dataset.to_csv("data/final-data.csv", sep=',', index=False, encoding='utf-8')
+    dataset.to_csv("data/data10.csv", sep=',', index=False, encoding='utf-8')
 else:
     dataset.to_csv("data/full-data.csv", sep=',', index=False, encoding='utf-8')
 
