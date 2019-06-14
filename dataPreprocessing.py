@@ -42,10 +42,10 @@ def multipleReplace(dataset, colname, phraseList, replace):
 # ------------------------------------------------- Data import --------------------------------------------------------
 # Sample data
 sampleData = True
-sampleHeight = 0.5
+sampleHeight = 0.75
 delaysOutliers = 3
 studentsOutliers = 1
-dataFileName = "data/data11.csv"
+dataFileName = "data/data75.csv"
 
 # Full data
 fullData = pd.read_csv("data/bus-breakdown-and-delays.csv", dtype={"Incident_Number": str})

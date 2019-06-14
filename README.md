@@ -87,17 +87,19 @@ Celem projektu jest wykorzystanie metod analizy skupień do przeanalizowania pow
 ## Analiza działania algorytmów
 Poniższa tabela przedstawia analizę porównawczą czasów wykonywania badanych algorytmów klasteryzacji w zależności od wielkości próbki danych.*
 
-| Algorytm             | Sample 10%    |  Sample 25% | Sample 50% | Sample 75% | Sample 100% |
-|----------------------|:-------------:|------------:|-----------:|-----------:|------------:|
-| Metoda k-średnich    |    1.5s       |   4.7s      |   12.4s    |   20.9s    |   xx.xxs    |
-| MeanShift            |    1.3s       |   3.1s      |    5.6s    |   9.5s     |   xx.xxs    |
+| Algorytm                   | Sample 10%    |  Sample 25% | Sample 50% | Sample 75% | Sample 100% |
+|----------------------------|:-------------:|------------:|-----------:|-----------:|------------:|
+| Metoda k-średnich          |    1.5s       |   4.7s      |   12.4s    |   20.9s    |   25.2s     |
+| MeanShift                  |    1.3s       |   3.1s      |    5.6s    |   9.5s     |   11.0s     |
+| Różnica czasów działania   |    0.2s       |   1.6s      |    6.8s    |   11.4s    |   14.2s     |
 
 Poniższa tabela przedstawia analizę porównawczą liczby klastrów jakie zostały wyodrębnione przez poszczególne algorytmy w zależności od wielkości próbki danych.*
 
-| Algorytm             | Sample 10%    |  Sample 25% | Sample 50% | Sample 75% | Sample 100% |
-|----------------------|:-------------:|------------:|-----------:|-----------:|------------:|
-| Metoda k-średnich    |    3          |   3         |   3        |       3    |   3         |
-| MeanShift            |    11         |   18        |       20   |   23       |       xx    |
+| Algorytm                   | Sample 10%    |  Sample 25% | Sample 50% | Sample 75% | Sample 100% |
+|----------------------------|:-------------:|------------:|-----------:|-----------:|------------:|
+| Metoda k-średnich          |    3          |   3         |   3        |       3    |   3         |
+| MeanShift                  |    11         |   18        |       20   |   23       |       19    |
+| Różnica liczby klastrów    |      8        |     15      |    17      |    20      |     16      |
 
 *Wszystkie wartości czasowe oraz liczbowe zostały uzyskane na jednolitym środowisku testowym o architekturze 64-bitowej.
 
