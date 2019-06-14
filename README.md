@@ -89,15 +89,15 @@ Poniższa tabela przedstawia analizę porównawczą czasów wykonywania badanych
 
 | Algorytm             | Sample 10%    |  Sample 25% | Sample 50% | Sample 75% | Sample 100% |
 |----------------------|:-------------:|------------:|-----------:|-----------:|------------:|
-| Metoda k-średnich    |    1.5s       |   4.7s      |   12.4s    |   xx.xxs   |   xx.xxs    |
-| MeanShift            |    1.3s       |   3.1s      |    5.6s    |   xx.xxs   |   xx.xxs    |
+| Metoda k-średnich    |    1.5s       |   4.7s      |   12.4s    |   20.9s    |   xx.xxs    |
+| MeanShift            |    1.3s       |   3.1s      |    5.6s    |   9.5s     |   xx.xxs    |
 
 Poniższa tabela przedstawia analizę porównawczą liczby klastrów jakie zostały wyodrębnione przez poszczególne algorytmy w zależności od wielkości próbki danych.*
 
 | Algorytm             | Sample 10%    |  Sample 25% | Sample 50% | Sample 75% | Sample 100% |
 |----------------------|:-------------:|------------:|-----------:|-----------:|------------:|
 | Metoda k-średnich    |    3          |   3         |   3        |       3    |   3         |
-| MeanShift            |    11         |   18        |       20   |   xx       |       xx    |
+| MeanShift            |    11         |   18        |       20   |   23       |       xx    |
 
 *Wszystkie wartości czasowe oraz liczbowe zostały uzyskane na jednolitym środowisku testowym o architekturze 64-bitowej.
 
