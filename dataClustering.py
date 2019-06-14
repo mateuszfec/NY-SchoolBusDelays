@@ -8,12 +8,12 @@ import time
 
 startTime = time.time()
 
-dataset = pd.read_csv("data/mini-data.csv")
+dataset = pd.read_csv("data/full-data.csv")
 
 X = dataset[['Bus_Run_Type', 'Bus_Delay']].values
 
 algorithmKMeans = True
-algorithmAffProp = True
+algorithmAffProp = False
 algorithmMeanShift = True
 
 # ---------------------------------------------------- K-Means ---------------------------------------------------------
