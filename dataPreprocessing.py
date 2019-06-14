@@ -41,10 +41,11 @@ def multipleReplace(dataset, colname, phraseList, replace):
 
 # ------------------------------------------------- Data import --------------------------------------------------------
 # Sample data
-sampleData = False
-sampleHeight = 0.1
+sampleData = True
+sampleHeight = 0.5
 delaysOutliers = 3
-studentsOutliers = 6
+studentsOutliers = 1
+dataFileName = "data/data11.csv"
 
 # Full data
 fullData = pd.read_csv("data/bus-breakdown-and-delays.csv", dtype={"Incident_Number": str})
@@ -296,7 +297,7 @@ plt.show()
 
 # -------------------------------------------------- Export data -------------------------------------------------------
 if sampleData:
-    dataset.to_csv("data/data10.csv", sep=',', index=False, encoding='utf-8')
+    dataset.to_csv(dataFileName, sep=',', index=False, encoding='utf-8')
 else:
     dataset.to_csv("data/full-data.csv", sep=',', index=False, encoding='utf-8')
 

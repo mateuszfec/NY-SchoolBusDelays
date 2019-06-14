@@ -8,19 +8,67 @@ Celem projektu jest wykorzystanie metod analizy skupień do przeanalizowania pow
 
 ## Opis danych
 1. **Zmienne kategoryczne**
-    * Delay_Reason - zmienna kategoryczna przyjmująca wartość **1** w sytuacji, gdy nie wystąpiło opóźnienie oraz wartości **2-11** w zależności od rozpoznanych przyczyn awarii,tj.:
-        wypadek, korek, usterka mechaniczna, warunki pogodowe, brak możliwości uruchomienia zapłonu itp.
-    * School_Year
-    * School_Level - jeden z dwóch poziomów edukacji (**1** - wiek przedszkolny, **2** - wiek szkolny)
-    * Delay_Result - dwa skutki opóźnienia - awaria (wartość **1**) oraz opóźniony przyjaxd (wartość **2**)
+    * Delay_Reason - zmienna kategoryczna przyjmująca wartości **1-10** w zależności od rozpoznanych przyczyn awarii,tj.:
+        * 1 - przyczyna nierozpoznana/nie została zgłoszona
+        * 2 - wypadek
+        * 3 - opóźnienie przez szkołę
+        * 4 - przebita opona
+        * 5 - wysokie natężenie ruchu
+        * 6 - późny powrót z wycieczki
+        * 7 - usterka mechaniczna
+        * 8 - inne
+        * 9 - problem z wyjazdem
+        * 10 - warunki pogodowe
+        * 11 - brak możliwości uruchomienia zapłonu
+    * School_Year - rok szkolny
+        * 1 - 2015/16
+        * 2 - 2016/17
+        * 3 - 2017/18
+        * 4 - 2018/19
+    * School_Level - jeden z dwóch poziomów edukacji
+        * 1 - wiek przedszkolny
+        * 2 - wiek szkolny
+    * Delay_Result - skutki opóźnienia
+        * 1 - awaria
+        * 2 - opóźniony przyjazd
     * Bus_Company - jedna z 62 firm transportowych świadczących usługi przewozowe dla szkół
     * Boro - jedna z 10 dzielnic Nowego Jorku (wartości **2-10** oraz **12**); wartość **11** przyjęto dla nierozpoznanej dzielnicy
+        * 1 - wszystkie dzielnice
+        * 2 - Bronx
+        * 3 - Brooklyn
+        * 4 - Connecticut
+        * 5 - Manhattan
+        * 6 - Nassau County
+        * 7 - New Jersey
+        * 8 - Queens
+        * 9 - Rockland County
+        * 10 - Staten Island
+        * 11 - brak danych
+        * 12 - Westchester
     * Route_Number - unikalny identyfikator trasy autobusu szkolnego
     * Bus_Number - unikalny identyfikator autobusu szkolnego
-    * Bus_Run_Type
-    * OPT_Alerted
-    * Schools_Notified - zmienna binarna przyjmująca wartość **1** w sytuacji, gdy szkoła został poinformowana o opóźnieniu autobusu oraz **0** w pozostałych przypadkach
-    * Parents_Notified - zmienna binarna przyjmująca wartość **1** w sytuacji, gdy rodzice zostali poinformowani o opóźnieniu autobusu oraz **0** w pozostałych przypadkach
+    * Bus_Run_Type - rodzaj przewozu
+        * 1 - nieznany
+        * 2 - General Ed AM Run
+        * 3 - General Ed Field Trip
+        * 4 - General Ed PM Run
+        * 5 - Pre-K/EI
+        * 6 - Project Read AM Run
+        * 7 - Project Read Field Trip
+        * 8 - Project Read PM Run
+        * 9 - Special Ed AM Run
+        * 10 - Special Ed Field Trip
+        * 11 - Special Ed PM Run
+    * OPT_Alerted - zmienna binarna
+        * 1 - w systemie zarejestrowano opóźnienie autobusu
+        * 0 - inaczej
+    * Schools_Notified - zmienna binarna
+        * 1 - szkoła została poinformowana o opóźnieniu autobusu
+        * 0 - inaczej
+    * Parents_Notified - zmienna binarna 
+        * 1 - rodzice poinformowani o opóźnieniu autobusu
+        * 0 - inaczej
+
 2. **Zmienne ciągłe**
     * Bus_Delay - czas opóźnienia autobusu
     * Event_Date - data wystąpienia opóźnienia
@@ -33,30 +81,31 @@ Celem projektu jest wykorzystanie metod analizy skupień do przeanalizowania pow
 
 ## Stosowane algorytmy
 1. [Metoda k-średnich](https://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html)
-2. [Affinity propagation](https://scikit-learn.org/stable/modules/generated/sklearn.cluster.AffinityPropagation.html)
-3. [MeanShift](https://scikit-learn.org/stable/modules/generated/sklearn.cluster.MeanShift.html)
+2. [MeanShift](https://scikit-learn.org/stable/modules/generated/sklearn.cluster.MeanShift.html)
 
 [comment]: <> (todo: zastanowic sie nad finalnie uzywanymi metodami)
-## Otrzymane wyniki
+## Analiza działania algorytmów
 Poniższa tabela przedstawia analizę porównawczą czasów wykonywania badanych algorytmów klasteryzacji w zależności od wielkości próbki danych.*
 
 | Algorytm             | Sample 10%    |  Sample 25% | Sample 50% | Sample 75% | Sample 100% |
 |----------------------|:-------------:|------------:|-----------:|-----------:|------------:|
-| Metoda k-średnich    |    xx.xxs     |   xx.xxs    |   xx.xxs   |   xx.xxs   |   xx.xxs    |
-| Affinity propagation |    xx.xxs     |   xx.xxs    |   xx.xxs   |   xx.xxs   |   xx.xxs    |
-| MeanShift            |    xx.xxs     |   xx.xxs    |   xx.xxs   |   xx.xxs   |   xx.xxs    |
+| Metoda k-średnich    |    1.5s       |   4.7s      |   12.4s    |   20.9s    |   xx.xxs    |
+| MeanShift            |    1.3s       |   3.1s      |    5.6s    |   9.5s     |   xx.xxs    |
 
 Poniższa tabela przedstawia analizę porównawczą liczby klastrów jakie zostały wyodrębnione przez poszczególne algorytmy w zależności od wielkości próbki danych.*
 
 | Algorytm             | Sample 10%    |  Sample 25% | Sample 50% | Sample 75% | Sample 100% |
 |----------------------|:-------------:|------------:|-----------:|-----------:|------------:|
-| Metoda k-średnich    |    xx         |   xx        |   xx       |       xx   |   xx        |
-| Affinity propagation |    xx         |   xx        |   xx       |   xx       |   xx        |
-| MeanShift            |    xx         |   xx        |       xx   |   xx       |       xx    |
+| Metoda k-średnich    |    3          |   3         |   3        |       3    |   3         |
+| MeanShift            |    11         |   18        |       20   |   23       |       xx    |
 
 *Wszystkie wartości czasowe oraz liczbowe zostały uzyskane na jednolitym środowisku testowym o architekturze 64-bitowej.
 
 [comment]: <> (todo: Wykresy/ploty w jakimś dobrym ułożeniu)
+
+## Otrzymane wyniki
+
+[comment]: <> (todo: analiza 2 przypadkow "uzycia")
 
 ## Podsumowanie 
 [comment]: <> (todo)
