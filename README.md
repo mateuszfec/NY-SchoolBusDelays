@@ -121,6 +121,7 @@ Jedną z możliwych przyczyn jest wysokie natężenie ruchu w każdej z dzielnic
 kilka dróg stanowych oraz krajowych) - Nowy Jork jest miejscem, przez które trzeba przejechać w celu dojazdu np. do Long Island, leżącego na wschód od miasta.
 Ponadto, miasto jest ważnym szlakiem komunikacyjnym w relacji północ - południe na Wschodnim Wybrzeżu, przez które przebiega m.in. jedna z ważniejszych amerykańskich autostrad - Interstate 95
 łącząca miasta tj. Baltimore, Waszyngton, Boston czy Filadelfia.
+
 [comment]: <> (boxploty tutaj też by się przydały)
 [comment]: <> (todo: analiza 2 przypadkow "uzycia" - dopisz coś o MeanShift bo wiesz lepiej jak ten alg dokładnie działa)
 
