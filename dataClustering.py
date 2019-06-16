@@ -8,9 +8,9 @@ import time
 
 startTime = time.time()
 
-dataset = pd.read_csv("data/full-data.csv")
+dataset = pd.read_csv("data/data10.csv")
 
-X = dataset[['Bus_Run_Type', 'Bus_Delay']].values
+X = dataset[['Boro', 'Bus_Delay']].values
 
 algorithmKMeans = True
 algorithmAffProp = False

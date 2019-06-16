@@ -32,8 +32,8 @@ Celem projektu jest wykorzystanie metod analizy skupień do przeanalizowania pow
         * 1 - awaria
         * 2 - opóźniony przyjazd
     * Bus_Company - jedna z 62 firm transportowych świadczących usługi przewozowe dla szkół
-    * Boro - jedna z 10 dzielnic Nowego Jorku (wartości **2-10** oraz **12**); wartość **11** przyjęto dla nierozpoznanej dzielnicy
-        * 1 - wszystkie dzielnice
+    * Boro - jedna z 10 dzielnic Nowego Jorku (wartości **2-11**); wartość **1** przyjęto dla nierozpoznanej dzielnicy
+        * 1 - brak danych
         * 2 - Bronx
         * 3 - Brooklyn
         * 4 - Connecticut
@@ -43,8 +43,7 @@ Celem projektu jest wykorzystanie metod analizy skupień do przeanalizowania pow
         * 8 - Queens
         * 9 - Rockland County
         * 10 - Staten Island
-        * 11 - brak danych
-        * 12 - Westchester
+        * 11 - Westchester
     * Route_Number - unikalny identyfikator trasy autobusu szkolnego
     * Bus_Number - unikalny identyfikator autobusu szkolnego
     * Bus_Run_Type - rodzaj przewozu
@@ -104,13 +103,28 @@ Poniższa tabela przedstawia analizę porównawczą liczby klastrów jakie zosta
 *Wszystkie wartości czasowe oraz liczbowe zostały uzyskane na jednolitym środowisku testowym o architekturze 64-bitowej.
 
 [comment]: <> (todo: Wykresy/ploty w jakimś dobrym ułożeniu)
-
 ## Otrzymane wyniki
 
-[comment]: <> (todo: analiza 2 przypadkow "uzycia")
+Grupowanie metodą k-średnich wykazało, że w każdej dzielnicy występowały opóźnienia z przedziału 20-50 minut, których liczba była podobna
+(rozmiar analizowanej próbki nie miał tutaj znaczenia). Najmniejsze opóźnienia zanotowano w dzielnicach oznaczonych nr 4 i 5,
+a więc w Connecticut oraz na Manhattanie. Porównując te wyniki do zaobserwowanych w pozostałych dzielnicach można zaobserwować występowanie
+opóźnień mniejszych niż 5 minut, których nigdzie indziej nie odnotowano (możliwe, że takie opóźnienia wystąpiły, ale nie zostały wgrane do systemu informacyjnego).
+
+Z kolei największe opóźnienia, wynoszące ponad 6 h, odnotowano w kilku dzielnicach Nowego Jorku, tj.:
+* Bronx
+* Connecticut
+* Manhattan
+* New Jersey
+* Queens
+
+Jedną z możliwych przyczyn jest wysokie natężenie ruchu w każdej z dzielnic (oprócz ruchu lokalnego przez miasto przebiega
+kilka dróg stanowych oraz krajowych) - Nowy Jork jest miejscem, przez które trzeba przejechać w celu dojazdu np. do Long Island, leżącego na wschód od miasta.
+Ponadto, miasto jest ważnym szlakiem komunikacyjnym w relacji północ - południe na Wschodnim Wybrzeżu, przez które przebiega m.in. jedna z ważniejszych amerykańskich autostrad - Interstate 95
+łącząca miasta tj. Baltimore, Waszyngton, Boston czy Filadelfia.
+[comment]: <> (boxploty tutaj też by się przydały)
+[comment]: <> (todo: analiza 2 przypadkow "uzycia" - dopisz coś o MeanShift bo wiesz lepiej jak ten alg dokładnie działa)
 
 ## Podsumowanie 
 [comment]: <> (todo)
-
 
 
