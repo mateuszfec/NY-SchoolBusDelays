@@ -75,34 +75,48 @@ Celem projektu jest wykorzystanie metod analizy skupień do przeanalizowania pow
     * Informed_On - czas poinformowania pasażerów o opóźnieniu
     * Reaction_Time - czas reakcji liczony jako czas pomiędzy czasem wystąpienia opóźnienia a czasem poinformowania pasażerów
     * Students_Number - liczba uczniów znajdujących się w autobusie w momencie wystąpienia opóźnienia
+    
 ## Hipotezy badawcze
-[comment]: <> (todo)
+**Hipoteza główna:** Opóźnienia autobusów szkolnych w Nowym Jorku **nie zależą** od dzielnicy miasta
+<br>
+**Hipoteza alternatywna:** Opóźnienia autobusów szkolnych w Nowym Jorku **zależą** od dzielnicy miasta
 
 ## Stosowane algorytmy
 1. [Metoda k-średnich](https://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html)
-2. [MeanShift](https://scikit-learn.org/stable/modules/generated/sklearn.cluster.MeanShift.html)
+2. [Affinity Propagation](https://scikit-learn.org/stable/modules/generated/sklearn.cluster.AffinityPropagation.html) *
+2. [Mean Shift](https://scikit-learn.org/stable/modules/generated/sklearn.cluster.MeanShift.html)
 
-[comment]: <> (todo: zastanowic sie nad finalnie uzywanymi metodami)
+*Na podstawie analiz przeprowadzonych po implementacji algorytmów, metoda Affinity Propagation dla wykorzystywanego zbioru danych nie pozwala na przeprowadzenie sensownego oraz efektywnego klasteringu.
+
 ## Analiza działania algorytmów
 Poniższa tabela przedstawia analizę porównawczą czasów wykonywania badanych algorytmów klasteryzacji w zależności od wielkości próbki danych.*
 
-| Algorytm                   | Sample 10%    |  Sample 25% | Sample 50% | Sample 75% | Sample 100% |
+| Algorytm                   | Próbka 10%    |  Próbka 25% | Próbka 50% | Próbka 75% | Próbka 100% |
 |----------------------------|:-------------:|------------:|-----------:|-----------:|------------:|
 | Metoda k-średnich          |    1.5s       |   4.7s      |   12.4s    |   20.9s    |   25.2s     |
 | MeanShift                  |    1.3s       |   3.1s      |    5.6s    |   9.5s     |   11.0s     |
 | Różnica czasów działania   |    0.2s       |   1.6s      |    6.8s    |   11.4s    |   14.2s     |
 
+**Analiza graficzna**
+
+![Czas działania algorytmów](analysis-results/czas_dzialania.png)
+
+<br>
+
 Poniższa tabela przedstawia analizę porównawczą liczby klastrów jakie zostały wyodrębnione przez poszczególne algorytmy w zależności od wielkości próbki danych.*
 
-| Algorytm                   | Sample 10%    |  Sample 25% | Sample 50% | Sample 75% | Sample 100% |
+| Algorytm                   | Próbka 10%    |  Próbka 25% | Próbka 50% | Próbka 75% | Próbka 100% |
 |----------------------------|:-------------:|------------:|-----------:|-----------:|------------:|
 | Metoda k-średnich          |    3          |   3         |   3        |       3    |   3         |
 | MeanShift                  |    11         |   18        |       20   |   23       |       19    |
 | Różnica liczby klastrów    |      8        |     15      |    17      |    20      |     16      |
 
+**Analiza graficzna**
+
+![Liczba klastrów](analysis-results/liczba_klastrow.png)
+
 *Wszystkie wartości czasowe oraz liczbowe zostały uzyskane na jednolitym środowisku testowym o architekturze 64-bitowej.
 
-[comment]: <> (todo: Wykresy/ploty w jakimś dobrym ułożeniu)
 ## Otrzymane wyniki
 
 Grupowanie metodą k-średnich wykazało, że w każdej dzielnicy występowały opóźnienia z przedziału 20-50 minut, których liczba była podobna
@@ -122,10 +136,12 @@ kilka dróg stanowych oraz krajowych) - Nowy Jork jest miejscem, przez które tr
 Ponadto, miasto jest ważnym szlakiem komunikacyjnym w relacji północ - południe na Wschodnim Wybrzeżu, przez które przebiega m.in. jedna z ważniejszych amerykańskich autostrad - Interstate 95
 łącząca miasta tj. Baltimore, Waszyngton, Boston czy Filadelfia.
 
-[comment]: <> (boxploty tutaj też by się przydały)
-[comment]: <> (todo: analiza 2 przypadkow "uzycia" - dopisz coś o MeanShift bo wiesz lepiej jak ten alg dokładnie działa)
+**Analiza graficzna**
+
+![Porównanie algorytmów](analysis-results/alg_comparsion.png)
 
 ## Podsumowanie 
-[comment]: <> (todo)
 
+Poniżej przedstawiono rezultaty klasteryzacji dokojanej przy pomocy dwóch algorytmów (metoda k-średnich oraz Mean Shift) dla próbek danych o różnej wielkości (próbki losowe z całego zbioru danych).
 
+![Rezultaty w odniesieniu do wielkości próbki](analysis-results/samples.png)
